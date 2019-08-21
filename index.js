@@ -5,6 +5,7 @@ const addRoutes = require('./routes/add');
 const coursesRoutes = require('./routes/courses');
 const cardRoutes = require('./routes/card');
 const app = express();
+const mongoose = require('mongoose');
 const { join } = require('path');
 
 const hbs = exhbs.create({
@@ -25,8 +26,17 @@ app.use('/courses', coursesRoutes);
 app.use('/card', cardRoutes);
 
 const port = process.env.PORT || 3000;
-const url = `mongodb+srv://eugene:FdSKVl9PsjKlQiFd@cluster0-pumsp.mongodb.net/test?retryWrites=true&w=majority`
+const url = `mongodb+srv://eugene:420blazeit@cluster0-pumsp.mongodb.net/test?retryWrites=true&w=majority`
 
-app.listen(port, () => {
-	console.log(`Server is running on port ${port}`);
-});
+async function start(url, port) {
+	try {
+		await mongoose.connect(url, { useNewUrlParser: true });
+		app.listen(port, () => {
+			console.log(`Server is running on port ${port}`);
+		});
+	} catch (e) {
+		console.error(e);
+	}
+}
+
+start(url, port);
