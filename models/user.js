@@ -43,4 +43,26 @@ User.methods.addToCart = async function(course) {
 	await this.save();
 }
 
+User.methods.removeFromCart = async function(id) {
+	let items = [...this.cart.items];
+	const idx = items.findIndex(c => c.courseId.toString() === id.toString());
+	console.log(items, id, idx);
+
+	if (items[idx].count === 1) {
+		items = items.filter(c => c.courseId.toString() !== id.toString())
+	} else {
+		items[idx].count--;
+	}
+
+	this.cart = {items};
+	return this.save();
+}
+
+User.methods.clearCart = async function(id) {
+	this.cart = {items: []};
+	return this.save();
+}
+
+
+
 module.exports = model('User', User);
